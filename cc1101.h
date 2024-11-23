@@ -29,6 +29,8 @@ class CC1101 : public PollingComponent, public Sensor {
     ELECHOUSE_cc1101.setRxBW(_bandwidth);
     ELECHOUSE_cc1101.setMHZ(_freq);
     ELECHOUSE_cc1101.SetRx();
+    ELECHOUSE_cc1101.setModulation(0);
+    ELECHOUSE_cc1101.setChannel(0);
   }
 
  public:
