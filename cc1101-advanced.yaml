@@ -39,17 +39,17 @@ number:
     name: BW
     on_value:
       then:
-        - lambda: get_cc1101(transciver).setBW(x);
+        - lambda: get_cc1101(transceiver).setBW(x);
   - platform: template
-    # if your cc1101 board is tuned for ~320MHz
+    # Uncomment this section if your cc1101 board is tuned for ~320MHz
     # min_value: 300
     # max_value: 348
 
-    # if your cc1101 board is tuned for ~433MHz
+    # Uncomment this section if your cc1101 board is tuned for ~433MHz
     min_value: 378
     max_value: 464
 
-    # if your cc1101 board is tuned for ~868Hz
+    # Uncomment this section if your cc1101 board is tuned for ~868MHz
     # min_value: 799
     # max_value: 928
 
@@ -60,25 +60,25 @@ number:
     name: FREQ
     on_value:
       then:
-        - lambda: get_cc1101(transciver).setFreq(x);
+        - lambda: get_cc1101(transceiver).setFreq(x);
 
 sensor:
   - platform: custom
     lambda: |-
       auto my_sensor = new CC1101(
 
-        // esp8266 example
+        // esp8266 configuration example
         D5, // SCK
         D6, // MISO
         D7, // MOSI
         D3, // CSN
         D1, // GDO0
 
-        // esp32 example
+        // esp32 configuration example
         // 18, // SCK
         // 19, // MISO
         // 23, // MOSI
-        // 5, // CSN
+        // 5,  // CSN
         // 32, // GDO0
 
         200, // bandwidth_in_khz
@@ -88,19 +88,19 @@ sensor:
       App.register_component(my_sensor);
       return {my_sensor};
     sensors:
-      id: transciver
+      id: transceiver
       internal: true
 remote_transmitter:
   - id: transmitter
     pin:
-      number: D1 # This is GDO0
+      number: D1 # ESP32: replace with "GPIO32"
       allow_other_uses: true
     carrier_duty_percent: 100%
 
 remote_receiver:
   - id: receiver
     pin:
-      number: D1 # This is GDO0
+      number: D1 # ESP32: replace with "GPIO32"
       allow_other_uses: true
       # on the esp8266 use any of D1,D2,D5,D6,D7,Rx
       # Don't use D3,D4,D8,TX, boot often fails.
@@ -117,21 +117,21 @@ switch:
   - platform: template
     name: "RSSI"
     entity_category: diagnostic
-    lambda: return get_cc1101(transciver).rssi_on;
+    lambda: return get_cc1101(transceiver).rssi_on;
     turn_on_action:
-      lambda: get_cc1101(transciver).rssi_on = true;
+      lambda: get_cc1101(transceiver).rssi_on = true;
     turn_off_action:
-      lambda: get_cc1101(transciver).rssi_on = false;
+      lambda: get_cc1101(transceiver).rssi_on = false;
 
 button:
   - platform: template
     name: Garage
     on_press:
-      - lambda: get_cc1101(transciver).beginTransmission();
+      - lambda: get_cc1101(transceiver).beginTransmission();
       - remote_transmitter.transmit_raw:
           # prettier-ignore
           code: [990,-330,330,-990,990,-330,330,-990,330,-990,330,-990,330,-990,330,-990,330,-990,990,-330,330,-990,990,-330,330,-990,330,-990,330,-990,330,-990,330,-990,330,-990,990,-330,990,-330,330,-990,330,-990,990,-330,330,-990,330]
           repeat:
             times: 3
             wait_time: 4.733ms
-      - lambda: get_cc1101(transciver).endTransmission();
+      - lambda: get_cc1101(transceiver).endTransmission();
