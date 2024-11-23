@@ -32,6 +32,7 @@ number:
   - platform: template
     max_value: 812
     min_value: 58
+    initial_value: 200
     step: 1
     mode: slider
     optimistic: true
@@ -44,14 +45,17 @@ number:
     # Uncomment this section if your cc1101 board is tuned for ~320MHz
     # min_value: 300
     # max_value: 348
+    # initial_value: 320
 
     # Uncomment this section if your cc1101 board is tuned for ~433MHz
     min_value: 378
     max_value: 464
+    initial_value: 433
 
     # Uncomment this section if your cc1101 board is tuned for ~868MHz
     # min_value: 799
     # max_value: 928
+    # initial_value: 868
 
     step: .001
     mode: box
